@@ -1,0 +1,86 @@
+# Set to yes if you want Conky to be forked in the background
+background yes
+
+#use Xft?
+use_xft yes
+
+# use Xft font when Xft is enabled
+xftfont verdana:size=8
+
+# Text alpha when using Xft
+xftalpha 0.8
+
+alignment top_right
+
+own_window yes
+own_window_type override
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+double_buffer yes
+draw_shades no
+draw_outline no
+draw_borders no
+stippled_borders 10
+border_margin 4
+border_width 1
+
+#Colors
+default_shade_color grey
+default_outline_color black
+default_color BADCDD #lt. blue
+color1 6694b2 #darker blue
+color2 f8df58 #orange
+color3 ffffff #white
+color4 b4b4b4 #lightgrey
+color5 666666 #dark grey
+color6 da0000 #red
+
+use_spacer none
+no_buffers yes
+uppercase no
+
+short_units yes
+pad_percents 2
+top_name_width 7
+
+
+TEXT
+${font A BITE:size=10}${time %A}
+${voffset -20}$hr
+${voffset -15}$alignr${time %B}${font size=10}${voffset -5}${time %d}
+${voffset -13}${font Radio Space:size=25}${time %H}${voffset -15}${font Radio Space:size=15}${time :%M}
+
+${color 6694B2}${font A BITE:size=10}${nodename}${font}:
+${voffset -15}$hr
+${font}Kernel :	${alignr}${kernel}
+${font}Uptime :	${alignr}${uptime} 
+   ${color F8DF58}${font StyleBats:size=10}8${font} Battery: ${battery} ${alignr}${color 6694b2}${battery_bar 8,60}
+   $color${font StyleBats:size=10}I${font} Root(${fs_type /}): ${fs_used_perc /}% $alignr${fs_bar 8,60 /}
+   $color${font StyleBats:size=10}I${font} Storage(${fs_type /win7}): ${fs_used_perc /win7}% $alignr${fs_bar 8,60 /win7}
+
+   ${color ffffff}${font StyleBats:size=10}A${font} CPU0: ${cpu cpu0}% ${alignr}${cpubar 8,60 cpu0}
+   ${font StyleBats:size=10}A${font} CPU1: ${cpu cpu1}% ${alignr}${cpubar 8,60 cpu1}
+	 	   ${color grey}CPUhog ${alignr}PID   CPU%
+  				 ${color lightgrey} ${top name 1} $alignr${top pid 1} ${top cpu 1}
+	  			 ${color lightgrey} ${top name 2} $alignr${top pid 2} ${top cpu 2}
+	  			 ${color lightgrey} ${top name 3} $alignr${top pid 3} ${top cpu 3}
+   $color${font StyleBats:size=10}p${font} Mem: ${memperc}% ${alignr}${membar 8,60}
+		    ${color grey}MEMhog ${alignr}PID   MEM%
+			  	 ${color lightgrey} ${top_mem name 1} $alignr${top_mem pid 1} ${top_mem mem 1}
+			  	 ${color lightgrey} ${top_mem name 2} $alignr${top_mem pid 2} ${top_mem mem 2}
+			  	 ${color lightgrey} ${top_mem name 3} $alignr${top_mem pid 3} ${top_mem mem 3}
+   ${font StyleBats:size=10}5${font} Volume: ${execi 6 amixer sget Master,0 |grep "Front Left:"|cut -d "[" -f2|cut -d "%" -f1}% $alignr${mixerbar Master 8,60} 
+${font A BITE:size=10}Communications${font}:
+${voffset -15}$hr
+   ${font PizzaDude Bullets:size=10}v${font}   Up: ${upspeed wlan0} $alignr ${upspeedgraph 8,60 wlan0} 
+   ${font PizzaDude Bullets:size=10}r${font}   Down: ${downspeed wlan0} $alignr ${downspeedgraph 8,60 wlan0} 
+   ${font PizzaDude Bullets:size=10}M${font}   Upload: ${totalup wlan0} 
+   ${font PizzaDude Bullets:size=10}S${font}   Download: ${totaldown wlan0}
+   ${font pizzaDude Bullets:size=10}a${font}   wlan0: $alignr ${addr wlan0}
+   ${font pizzaDude Bullets:size=10}b${font}   External IP: $alignr ${execi 3600 wget -O - http://ip.tupeux.com | tail}
+
+${font}${hr 1}
+${if_existing /proc/net/route eth0}
+${addr eth0}${else}${if_existing /proc/net/route wlan0}
+${addr wlan0}${endif}
+${execi 3600 netstat -nut | sed '/ESTABLISHED/!d;s/.*[\t ]\+\(.*\):.*/\1/' | sort -u }

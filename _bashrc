@@ -1,0 +1,216 @@
+#!/bin/sh
+#
+# ~/.bashrc
+
+# Addind some paths 
+PATH="$PATH:$HOME/bin:/usr/local/sbin:/usr/sbin:/sbin"
+
+# Set a default shell prompt:
+#PS1='`hostname`:`pwd`# '
+if [ "$SHELL" = "/bin/pdksh" ]; then
+ PS1='! $ '
+elif [ "$SHELL" = "/bin/ksh" ]; then
+ PS1='! ${PWD/#$HOME/~}$ '
+elif [ "$SHELL" = "/bin/zsh" ]; then
+ PS1='%n@%m:%~%# '
+elif [ "$SHELL" = "/bin/ash" ]; then
+ PS1='$ '
+else
+ PS1='\u@\h:\w\$ '
+fi
+PS2='> '
+
+
+#
+# don't put duplicate lines in the history. See bash(1) for more options
+#
+export HISTCONTROL=ignoredups
+
+##### Setup Aterms #####
+# If change any of the variables, you need to uncomment the echo commands below 
+# to update the scripts
+#
+# Save history (-sl n lines).
+SL="-sl 30000"
+# Transparent (-tr), shading (n% of bg showing on focus).
+TR="-tr -shading 60"
+# Scrollbar on/off (-/+sb), transparent scrollbar on/off (-/+trsb). 
+SB="+sb -trsb"
+# Turn on/off scroll-to-bottom on TTY output inhibit (-/+si), on keypress (-/+sk). 
+STB="-si -sk"
+# Background color (-bg color), Foreground color (-fg \#hex). Only use a fg color
+# if want to override xdefault color schemes (i.e., making fg white here will stop
+# the bold and underline colors from appearing in man pages). The bg color will
+# affect what color shades the transparency.
+#COLOR="-bg black -fg \#ffffff"
+COLOR="-bg \#1C232E"
+# Fade (n% of original fg color on defocus). 
+FADE="-fade 80"
+# Terminal type name for $TERM (-tn xterm).
+TN="-tn xterm"
+# Fontname (-fn name). 
+FN="-fn -misc-fixed-medium-r-normal-*-*-140-*-*-c-*-iso8859-2"
+# Geometry (-g WxH+X+Y). The WxH is based on font, the X+Y is based on resolution."
+#
+
+# Create variables for the command strings
+# Working aterms
+#AT="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN $TN -g 129x65+290+195" 
+ATX="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn atermx -g 129x65+290+195" 
+AT1="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm1 -g 84x32+443+387"
+
+# 1/4 Screen, bottom right for working
+AT9="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm9 -g 84x32+839+690"
+
+# Full Screen for htop
+AT0="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm0 -g 169x78+77+0 &"
+
+# diagnostic aterms to fill the screen (left side, top to bottom)
+AT2="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm2 -g 64x25+77+0 &"
+AT3="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm3 -g 64x26+77+384 &"
+AT4="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm4 -g 64x26+77+780 &"
+# diagnostic aterms to fill the screen (right side, top to bottom)
+AT5="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm5 -g 104x11+354+0 &"
+AT6="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm6 -g 104x11+354+202 &"
+AT7="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm7 -g 104x11+354+404 &"
+AT8="/usr/bin/aterm $SL $TR $SB $STB $COLOR $FADE $FN -tn aterm8 -g 104x10+354+606 &"
+
+
+# Create scripts for fluxbox to use. Uncomment these if change the above variables.
+# The $@ allows calls to aterms that include other aterm options (i.e., the -e
+# execute command which is heavily used in fluxbox's menu).
+#echo $ATX '$@' > /usr/local/bin/atermx
+#echo $AT1 '$@' > /usr/local/bin/aterm1
+#echo $AT9 '$@' > /usr/local/bin/aterm9
+#echo $AT0 > /usr/local/bin/aterm0
+#echo $AT2 > /usr/local/bin/aterm2
+#echo $AT3 > /usr/local/bin/aterm3
+#echo $AT4 > /usr/local/bin/aterm4
+#echo $AT5 > /usr/local/bin/aterm5
+#echo $AT6 > /usr/local/bin/aterm6
+#echo $AT7 > /usr/local/bin/aterm7
+#echo $AT8 > /usr/local/bin/aterm8
+
+# Set user aliases.
+alias atermx=$ATX
+alias aterm1=$AT1
+alias aterm9=$AT9
+alias aterm0=$AT0
+alias aterm2=$AT2
+alias aterm3=$AT3
+alias aterm4=$AT4
+alias aterm5=$AT5
+alias aterm6=$AT6
+alias aterm7=$AT7
+alias aterm8=$AT8
+
+alias ls='ls --color=auto'
+alias ll='ls -l'
+alias la='ls -A'
+
+alias clr='clear'
+
+alias rm='rm -vi'
+alias cp='cp -vi'
+alias mv='mv -vi'
+# Directory navigation aliases
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+
+##### Everything Else #####
+# If on any terminal besides linux console:
+if [ "$TERM" != "linux" ]; then
+   # Issue commands to specific terminals after starting them.
+   case "$TERM" in
+      atermx)
+         cd /home/blah/modifieds
+         sys
+         export TERM="xterm"
+         ;;
+      aterm1)
+         cd /home/blah/ktorrent/seeding
+         export TERM="xterm"
+         ;;
+      aterm9)
+         export TERM="xterm"
+         i2prouter start &
+         I2PPID=$!
+         echo
+         sleep 3 
+         echo "   I2P PID: $I2PPID"
+         ;;
+      aterm0)
+         cd /home/blah/modifieds
+         export TERM="xterm"
+         /usr/bin/htop
+         ;;
+      aterm2)
+         cd /var/log
+         export TERM="xterm"
+         echo -n ""
+         sudo tail -f -n 1000 /var/log/secure
+         ;;
+      aterm3)
+         cd /home/blah
+         echo -n ""
+         export TERM="xterm"
+         ;;
+      aterm4)
+         cd /mnt
+         export TERM="xterm"
+         echo -n ""
+         df -h
+         ;;
+      aterm5)
+         cd /var/log
+         export TERM="xterm"
+         echo -n ""
+         sudo tail -f -n 1000 /var/log/messages
+         ;;
+      aterm6)
+         cd /var/log
+         export TERM="xterm"
+         echo -n ""
+         sudo tail -f -n 1000 /var/log/debug
+         ;;
+      aterm7)
+         cd /var/log
+         export TERM="xterm"
+         echo -n ""
+         sudo tail -f -n 1000 /var/log/syslog
+         ;;
+      aterm8)
+         cd /var/log
+         export TERM="xterm"
+         echo -n ""
+         sudo tail -f -n 1000 /var/log/secure
+         ;;
+      *)
+         ;;
+   esac
+ fi
+
+extract () {
+     if [ -f $1 ] ; then
+         case $1 in
+             *.tar.bz2)   tar xjf $1        ;;
+             *.tar.gz)    tar xzf $1     ;;
+             *.bz2)       bunzip2 $1       ;;
+             *.rar)       rar x $1     ;;
+             *.gz)        gunzip $1     ;;
+             *.tar)       tar xf $1        ;;
+             *.tbz2)      tar xjf $1      ;;
+             *.tgz)       tar xzf $1       ;;
+             *.zip)       unzip $1     ;;
+             *.Z)         uncompress $1  ;;
+             *.7z)        7z x $1    ;;
+             *)           echo "'$1' cannot be extracted via extract()" ;;
+         esac
+     else
+         echo "'$1' is not a valid file"
+     fi
+}
+
+
